@@ -54,7 +54,7 @@ public final class Etapa04_Aturar {
      */
     public static boolean aturaVigilant(Thread filDelVigilant) throws InterruptedException {
         // TODO FORAT 12 · Demana al fil del vigilant que s'interrompi.
-        Forat.n(12);
+        filDelVigilant.interrupt();
         return Etapa02_Esperar.esperaAmbLimit(filDelVigilant, 1000);
     }
 
