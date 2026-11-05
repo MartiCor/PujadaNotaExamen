@@ -7,16 +7,21 @@ import java.util.concurrent.atomic.AtomicInteger;
 /**
  * ETAPA 6 · La condició de carrera i com evitar-la (forats 16, 17 i 18).
  * <p>
- * Quatre caixes de ServiHub compten comandes sobre un mateix comptador. {@code valor++} sembla una
- * sola operació, però són tres (llegir, sumar, desar): si dues caixes ho fan alhora, es perden sumes.
- * Dues solucions: un bloc {@code synchronized} (només un fil alhora) o un {@link AtomicInteger}
+ * Quatre caixes de ServiHub compten comandes sobre un mateix comptador.
+ * {@code valor++} sembla una
+ * sola operació, però són tres (llegir, sumar, desar): si dues caixes ho fan
+ * alhora, es perden sumes.
+ * Dues solucions: un bloc {@code synchronized} (només un fil alhora) o un
+ * {@link AtomicInteger}
  * (una operació atòmica de maquinari).
  * <p>
- * Teoria: apartats 7 «Compartir i perills» i 8 «Sincronitzar»; exemple 2, ampliacions 1-3.
+ * Teoria: apartats 7 «Compartir i perills» i 8 «Sincronitzar»; exemple 2,
+ * ampliacions 1-3.
  */
 public final class Etapa06_Carrera {
 
-    private Etapa06_Carrera() {}
+    private Etapa06_Carrera() {
+    }
 
     /** El que fa qualsevol comptador de comandes. */
     public interface Comptador {
@@ -25,7 +30,10 @@ public final class Etapa06_Carrera {
         int valor();
     }
 
-    /** Tal com estava a classe: perd sumes. NO el toquis: serveix per veure el problema. */
+    /**
+     * Tal com estava a classe: perd sumes. NO el toquis: serveix per veure el
+     * problema.
+     */
     public static final class ComptadorInsegur implements Comptador {
         private int valor;
 
@@ -46,8 +54,11 @@ public final class Etapa06_Carrera {
 
         @Override
         public void incrementa() {
-            // TODO FORAT 16 · Incrementa valor dins d'un bloc synchronized sobre this (una sola línia).
-            Forat.n(16);
+            // TODO FORAT 16 · Incrementa valor dins d'un bloc synchronized sobre this (una
+            // sola línia).
+            synchronized (this) {
+                valor++;
+            }
         }
 
         @Override
@@ -65,18 +76,19 @@ public final class Etapa06_Carrera {
         @Override
         public void incrementa() {
             // TODO FORAT 17 · Incrementa l'AtomicInteger de manera atòmica.
-            Forat.n(17);
+            valor.incrementAndGet();
         }
 
         @Override
         public int valor() {
             // TODO FORAT 18 · Retorna el valor actual de l'AtomicInteger com a int.
-            return Forat.n(18);
+            return valor.get();
         }
     }
 
     /**
-     * Engega {@code caixes} fils que fan {@code perCaixa} increments cadascun i espera que acabin.
+     * Engega {@code caixes} fils que fan {@code perCaixa} increments cadascun i
+     * espera que acabin.
      *
      * @return el valor final del comptador (hauria de ser caixes × perCaixa)
      */
