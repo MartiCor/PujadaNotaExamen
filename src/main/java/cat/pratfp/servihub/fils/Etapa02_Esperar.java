@@ -39,7 +39,7 @@ public final class Etapa02_Esperar {
      */
     public static boolean esperaAmbLimit(Thread fil, long maximMs) throws InterruptedException {
         // TODO FORAT 05 · Espera el fil, però com a màxim maximMs mil·lisegons.
-        fil.join(500);
+        fil.join(maximMs);
         // TODO FORAT 06 · Retorna true només si el fil ja NO és viu.
         return !fil.isAlive();
     }
